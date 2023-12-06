@@ -1,0 +1,25 @@
+pipeline:
+  ntfy:
+    image: codeberg.org/l-x/woodpecker-ntfy
+    settings:
+      url: https://ntfy.sh/k0r
+      title: build finished
+      click: https://ci.k0r.in
+      icon: https://woodpecker-ci.org/img/logo.svg
+      tags: robot,${CI_BUILD_EVENT},${CI_REPO_NAME}
+      message: >
+          📝 Commit by ${CI_COMMIT_AUTHOR} on ${CI_COMMIT_BRANCH}:
+
+          ${CI_COMMIT_MESSAGE}
+
+  build:
+    image: node:20-alpine
+    commands:
+      - npm install
+      - npm run docs:build
+      - chmod -R a+rw /mnt
+      - rm -fr /mnt/dist
+      - cp -R .vitepress/dist /mnt/dist
+
+    volumes:
+      - /home/n/CI/koehr_ing:/mnt/
