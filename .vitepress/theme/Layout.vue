@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { useData } from 'vitepress'
+import { useData, useRouter } from 'vitepress'
 import useTerminal from './useTerminal'
 import titleArt from './titles'
 
-// https://vitepress.dev/reference/runtime-api#usedata
-const { site, frontmatter } = useData()
+const { site, page, frontmatter } = useData()
 const enhancedReadability = ref(false)
+const router = useRouter()
 
 const title = computed(() => {
   const titleKey = frontmatter.value.title
@@ -31,7 +31,15 @@ onMounted(() => {
 
   const { addText, addLine, clear, footerLinks } = useTerminal(textArea.value, commands.value)
 
+  watch(router.route, async () => {
+    if (page.value.isNotFound) {
+      addText('\n', false)
+      await router.go('404')
+    }
+  }, { immediate: true })
+
   watch(frontmatter, () => {
+    if (page.value.isNotFound) return
     addText(title.value + '\n', false)
     addLine(content.value.join('\n'))
   }, { immediate: true })

@@ -1,9 +1,13 @@
 import { ref } from 'vue'
 import type { SimpleCommand, Uri } from './Config'
+import { useRouter } from 'vitepress'
 
 export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[]) {
   const prompt = '\n$> '
   const footerLinks = ref([])
+
+  const router = useRouter()
+  console.log('router', router)
 
   function moveCursorToEnd() {
     const pos = inputEl.value.length
@@ -36,7 +40,7 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
     addText('')
   }
 
-  type SYS_OUT = 'NOT_FOUND' | 'USAGE' | 'INFO'
+  type SYS_OUT = 'NOT_FOUND' | 'USAGE' | 'INFO' | '404'
 
   const SHELL = 'k0rSH'
   const INFO = 'k0rSH v0.1: the k0r SHell, fiddled together by k0r -- https://k0r.in'
@@ -67,6 +71,10 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
         console.log('explaining myself')
         addLine(`${SHELL}: ${INFO}`)
         break
+      case '404':
+        console.log('page not found', arg)
+        addLine(`${SHELL}: ${arg}: this page does not exist`)
+        break
     }
   }
   
@@ -78,12 +86,14 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
     footerLinks.value = uris
   }
 
+  /// returns current command written in the command line
+  /// in the format: [command, arg1, arg2, ..., argN]
   function getCurrentCommand() {
     const value = inputEl.value
     const start = value.lastIndexOf(prompt) + prompt.length
     const end = value.length
 
-    return value.slice(start, end).trim()
+    return value.slice(start, end).trim().split(' ')
   }
 
   function execUserCommand(cmd: string) {
@@ -98,8 +108,16 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
     setFooter(userCommand.uris)
   }
 
+  function listPages() {
+    addLine('TODO: list pages')
+  }
+
+  async function openPage(page: string) {
+    await router.go(page)
+  }
+
   function handleCurrentCommand() {
-    const cmd = getCurrentCommand()
+    const [cmd, ...args] = getCurrentCommand()
 
     if (!cmd) {
       addText('')
@@ -116,6 +134,16 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
         break
       case 'clear':
         clear()
+        break
+      case 'ls':
+      case 'list':
+        listPages()
+        break
+      case 'go':
+      case 'open':
+        addText('\n', false)
+        if (!args.length) addText('USAGE: go page_name')
+        else router.go(args[0])
         break
       default:
         execUserCommand(cmd)

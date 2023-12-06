@@ -1,5 +1,4 @@
 ---
-home: true
 title: 'welcome'
 content: [
   'This is the homepage of Norman Köhring,',
@@ -11,3 +10,7 @@ content: [
   'Some commands might update the footer with useful links.'
 ]
 ---
+
+Some testcontent for testing.
+
+It is a *paragraph*!
