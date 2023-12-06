@@ -20,8 +20,8 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
     inputEl.focus()
   }
 
-  function addText(text: string) {
-    const line = text + prompt
+  function addText(text: string, addPrompt=true) {
+    const line = addPrompt ? text + prompt : text
     inputEl.value = inputEl.value + line
     inputEl.scrollTop = inputEl.scrollTopMax
   }
@@ -31,6 +31,7 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
   }
 
   function clear() {
+    footerLinks.value = []
     inputEl.value = ''
     addText('')
   }

@@ -29,9 +29,12 @@ onMounted(() => {
     return
   }
 
-  const { addText, clear, footerLinks } = useTerminal(textArea.value, commands.value)
-  clear()
-  addText('Hello World!')
+  const { addText, addLine, clear, footerLinks } = useTerminal(textArea.value, commands.value)
+
+  watch(frontmatter, () => {
+    addText(title.value + '\n', false)
+    addLine(content.value.join('\n'))
+  }, { immediate: true })
 
   watch(footerLinks, () => {
     footer.value = footerLinks.value
