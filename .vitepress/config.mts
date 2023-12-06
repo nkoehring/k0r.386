@@ -5,6 +5,22 @@ import type { ThemeConfig } from './theme/Config'
 export default defineConfigWithTheme<ThemeConfig>({
   title: "k0r.386",
   description: "Norman Köhrings Homepage",
+  lang: 'en',
+  head: [
+    ['link', { rel: 'icon', href: '/favicon.png' }],
+    ['link', { rel: 'alternate', href: 'https://k0r.in' }],
+    ['link', { rel: 'alternate', href: 'https://koehr.in' }],
+    ['link', { rel: 'alternate', href: 'https://koehr.ing' }],
+    ['link', { rel: 'canonical', href: 'https://koehr.ing' }],
+    ['meta', { content: "The personal page and weblog of Norman Köhring" name: "description" }],
+    ['meta', { content: "Norman Köhring" name: "author" }],
+    ['meta', { content: "the codeartist — programmer and engineer based in Berlin" name: "DC.title" }],
+    ['meta', { content: "52.4595, 13.5335" name: "ICBM" }],
+    ['meta', { content: "52.4595; 13.5335" name: "geo.position" }],
+    ['meta', { content: "DE-BE" name: "geo.region" }],
+    ['meta', { content: "Berlin" name: "geo.placename" }],
+    ['meta', { content: "width=device-width,initial-scale=1.0" name: "viewport" }],
+  ],
   themeConfig: {
     commands: [{
       command: 'about',

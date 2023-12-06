@@ -8,6 +8,6 @@ content: [
   'I call myself a code artist because programming can and should be seen as a creative process. Therefore code is art. I love to craft pieces of art with code that are beautiful and elegant in their simplicity, readability and architecture.',
   '',
   'Type "help" to see a list of available commands.',
-  'It is also possible to use the links in the footer.'
+  'Some commands might update the footer with useful links.'
 ]
 ---
