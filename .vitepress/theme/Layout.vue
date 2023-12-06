@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { useData, useRouter } from 'vitepress'
+import { useData } from 'vitepress'
 import useTerminal from './useTerminal'
 import titleArt from './titles'
 
 const { site, page, frontmatter } = useData()
 const enhancedReadability = ref(false)
-const router = useRouter()
 
 const title = computed(() => {
   const titleKey = frontmatter.value.title
-  const title = titleArt[titleKey] || titleArt['welcome']
+  const title = titleArt[titleKey] || titleArt['not_found']
 
   return title.join('\n')
 })
-const content = computed(() => frontmatter.value.content ?? [])
+const content = computed(() => frontmatter.value.content ?? ['this page does not exist'])
 const commands = computed(() => site.value.themeConfig.commands)
 
 const prompt = '\n$> '
@@ -31,15 +30,7 @@ onMounted(() => {
 
   const { addText, addLine, clear, footerLinks } = useTerminal(textArea.value, commands.value)
 
-  watch(router.route, async () => {
-    if (page.value.isNotFound) {
-      addText('\n', false)
-      await router.go('404')
-    }
-  }, { immediate: true })
-
   watch(frontmatter, () => {
-    if (page.value.isNotFound) return
     addText(title.value + '\n', false)
     addLine(content.value.join('\n'))
   }, { immediate: true })
