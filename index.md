@@ -1,5 +1,5 @@
 ---
-title: 'welcome'
+title: 'index'
 ---
 This is the homepage of Norman Köhring,
 a programmer, OpenSource enthusiast and hacker based in Berlin, Germany.

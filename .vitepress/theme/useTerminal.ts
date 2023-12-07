@@ -113,10 +113,21 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
     setFooter(userCommand.uris)
   }
 
+  const specialPages = ['README', 'not_found']
+  const knownPages = []
+
+  function fillKnownPages() {
+    pages.forEach(p => {
+      const title = p.frontmatter.title
+      if (!title?.length || specialPages.includes(title)) return
+      if (knownPages.includes(title)) return // no duplicates, please
+      knownPages.push(title)
+    })
+  }
+
   function listPages() {
-    const specialPages = ['README', 'not_found']
-    const pageTitles = pages.map(p => p.frontmatter.title).filter(t => t?.length && !specialPages.includes(t))
-    addLine(`Following pages are available:\n\n${pageTitles.join('\n')}\n\nUse the go command to switch pages.`)
+    if (knownPages.length === 0) fillKnownPages()
+    addLine(`Following pages are available:\n\n${knownPages.join('\n')}\n\nUse the go command to switch pages.`)
   }
 
   async function openPage(page: string) {
