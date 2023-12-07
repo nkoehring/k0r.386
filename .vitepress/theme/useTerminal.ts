@@ -2,12 +2,17 @@ import { ref } from 'vue'
 import type { SimpleCommand, Uri } from './Config'
 import { useRouter } from 'vitepress'
 
-export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[]) {
+type PageInfo = {
+  frontmatter: Record<string, string>
+  src: string
+  url: string
+}
+
+export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[], pages: PageInfo[]) {
   const prompt = '\n$> '
   const footerLinks = ref([])
 
   const router = useRouter()
-  console.log('router', router)
 
   function moveCursorToEnd() {
     const pos = inputEl.value.length
@@ -109,7 +114,9 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
   }
 
   function listPages() {
-    addLine('TODO: list pages')
+    const specialPages = ['README', 'not_found']
+    const pageTitles = pages.map(p => p.frontmatter.title).filter(t => t?.length && !specialPages.includes(t))
+    addLine(`Following pages are available:\n\n${pageTitles.join('\n')}\n\nUse the go command to switch pages.`)
   }
 
   async function openPage(page: string) {
