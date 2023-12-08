@@ -1,5 +1,8 @@
 ---
 title: 'index'
+uris: [
+  { label: 'Click here for a more classical version', uri: 'https://koehr.in/' },
+]
 ---
 This is the homepage of Norman Köhring,
 a programmer, OpenSource enthusiast and hacker based in Berlin, Germany.
