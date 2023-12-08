@@ -25,6 +25,7 @@ Notable features are:
 
 Planned features are:
 
+ * Slow text output, the real retro deal
  * Pagination (`more`-style)
 
 Anti-features (what you will not find as part of this theme):
