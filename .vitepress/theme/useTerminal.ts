@@ -2,15 +2,15 @@ import { ref } from 'vue'
 import type { SimpleCommand, Uri } from './Config'
 import { useRouter } from 'vitepress'
 
-type PageInfo = {
+type VitePressPage = {
   frontmatter: Record<string, string>
   src: string
   url: string
 }
 
-export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[], pages: PageInfo[]) {
+export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[], pages: VitePressPage[]) {
   const prompt = '\n$> '
-  const footerLinks = ref([])
+  const footerLinks = ref<Uri[]>([])
 
   const router = useRouter()
 
@@ -88,6 +88,7 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
   }
 
   function setFooter(uris: Uri[]) {
+    console.log('setting footer links', uris)
     footerLinks.value = uris
   }
 
@@ -185,5 +186,5 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
   inputEl.addEventListener('click', () => moveCursorToEnd())
   inputEl.addEventListener('keydown', handleInput)
 
-  return { addText, addLine, setFocus, clear, footerLinks }
+  return { addText, addLine, setFocus, clear, footerLinks, setFooter }
 }

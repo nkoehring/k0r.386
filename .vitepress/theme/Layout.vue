@@ -5,6 +5,8 @@ import useTerminal from './useTerminal'
 import titleArt from './titles'
 import { data as pages } from './pages.data'
 
+import type { Uri } from './Config'
+
 const { site, page } = useData()
 const enhancedReadability = ref(false) // TODO!
 
@@ -26,21 +28,28 @@ function parsedContent(src: string) {
   return content.join('\n\n')
 }
 
+type Page = {
+  title: string
+  titleArt: string
+  content: string
+  uris: Uri[]
+}
+
 function getCurrentPage(title: string) {
   const page = pages.find(p => p.frontmatter.title === title)
-  console.log('getting page', title, page)
   if (!page) {
-    console.error('current page not found')
+    console.error('☠️ current page not found in the list. This should never happen.')
     return {
       title: 'not_found',
       titleArt: getTitleArt('not_found'),
       content: 'The page could not be found.',
+      uris: [],
     }
   }
   const titleArt = page.frontmatter.titleArt ?? getTitleArt(title)
   const content = parsedContent(page.src)
 
-  return { title, titleArt, content }
+  return { title, titleArt, content, uris: page.frontmatter.uris ?? [] }
 }
 
 onMounted(() => {
@@ -49,11 +58,12 @@ onMounted(() => {
     return
   }
 
-  const { addText, addLine, clear, footerLinks } = useTerminal(textArea.value, commands.value, pages)
+  const { addText, addLine, clear, footerLinks, setFooter } = useTerminal(textArea.value, commands.value, pages)
 
   watch(page, () => {
-    const { title, titleArt, content } = getCurrentPage(page.value.title)
+    const { title, titleArt, content, uris } = getCurrentPage(page.value.title)
     addText(`${titleArt}\n${title}\n\n${content}`)
+    setFooter(uris)
   }, { immediate: true })
 
   watch(footerLinks, () => {
