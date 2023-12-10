@@ -1,23 +1,20 @@
 import { FLFParser, FontLayoutManager } from '@figlet-ts/lib'
-import * as fonts from '@figlet-ts/fonts/dist/fonts'
 
-function findFont(needle: string) {
-  if (!needle) return
+const fontGlob = import.meta.glob('./fonts/*.flf', { as: 'raw' })
 
-  needle = needle.toLowerCase()
-  for (let categoryName in fonts) {
-    const category = fonts[categoryName]
-    for (let name in category) {
-      if (name.toLowerCase() === needle) return category[name]
-    }
-  }
-  console.error(`Cannot find font "${needle}"!`)
+async function loadFont(name: string) {
+  const key = Object.keys(fontGlob).find(path => path.toLowerCase() === `./fonts/${name.toLowerCase()}.flf`)
+  if (!key) console.error(`Cannot find font "${name}"!`)
+
+  console.log('found font', name, key)
+  const font = await fontGlob[key]()
+  return font
 }
 
-function getFont(name: string, fallback: string) {
-  const font = findFont(name) ?? findFont(fallback) ?? fonts.Core.standard
-
-  const flf = FLFParser.parse(atob(font._contents))
+async function getFont(name: string, fallback: string) {
+  name = name ?? fallback ?? 'standard'
+  const font = await loadFont(name) ?? await loadFont(fallback) ?? await loadFont('standard') 
+  const flf = FLFParser.parse(font)
   return flf.font
 }
 
@@ -38,9 +35,9 @@ export default function useFiglet(defaultFontName = 'standard', htmlElement?: HT
     inputElement = el
   }
 
-  function render(text: string, fontName?: string) {
+  async function render(text: string, fontName?: string) {
     flm.width.set(calcMaxWidth())
-    const figFont = getFont(fontName, defaultFontName)
+    const figFont = await getFont(fontName, defaultFontName)
     const output = flm.renderText(text, figFont)
     return output
   }

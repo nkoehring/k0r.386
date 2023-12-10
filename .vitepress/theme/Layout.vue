@@ -32,19 +32,19 @@ type Page = {
   uris: Uri[]
 }
 
-function getCurrentPage(title: string) {
+async function getCurrentPage(title: string) {
   const page = pages.find(p => p.frontmatter.title === title)
   if (!page) {
     console.error('☠️ current page not found in the list. This should never happen.')
     return {
       title: 'not_found',
-      headerArt: figlet.render('404'),
+      headerArt: await figlet.render('404'),
       content: 'The page could not be found.',
       uris: [],
     }
   }
   const { header, headerFont, uris } = page.frontmatter
-  const headerArt = figlet.render(header, headerFont)
+  const headerArt = await figlet.render(header, headerFont)
   const content = parsedContent(page.src)
 
   return { title, headerArt, content, uris: uris ?? [] }
@@ -58,8 +58,8 @@ onMounted(() => {
 
   figlet.setInputElement(textArea.value)
 
-  function handlePageChange() {
-    const { title, headerArt, content, uris } = getCurrentPage(page.value.title)
+  async function handlePageChange() {
+    const { title, headerArt, content, uris } = await getCurrentPage(page.value.title)
     addText(`\n${headerArt}\n${title}\n\n${content}`)
     setFooter(uris)
   }
