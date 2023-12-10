@@ -34,6 +34,7 @@ export default function useFiglet(defaultFontName = 'standard', htmlElement?: HT
   }
 
   function setInputElement(el: HTMLElement) {
+    el.value = ''
     inputElement = el
   }
 
