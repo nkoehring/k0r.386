@@ -19,7 +19,9 @@ const footer = ref([])
 const figlet = useFiglet()
 
 function getHeaderArt(header: string, font: string) {
-  return figlet.render(header, font)
+  // Why is that so simple to approximate? Pretty sure, there is a mistake somewhere...
+  const maxWidth = Math.round(textArea.value?.getBoundingClientRect().width / 10) - 2
+  return figlet.render(header, font, maxWidth)
 }
 
 function parsedContent(src: string) {
@@ -42,7 +44,7 @@ function getCurrentPage(title: string) {
     console.error('☠️ current page not found in the list. This should never happen.')
     return {
       title: 'not_found',
-      headerArt: getTitleArt('not_found'),
+      headerArt: getHeaderArt('404', 'chunky'),
       content: 'The page could not be found.',
       uris: [],
     }

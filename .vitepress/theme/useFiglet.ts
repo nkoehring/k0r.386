@@ -22,7 +22,8 @@ function getFont(name: string) {
 export default function useFiglet() {
   const flm = new FontLayoutManager()
 
-  function render(text: string, fontName: string) {
+  function render(text: string, fontName: string, maxWidth: number) {
+    flm.width.set(maxWidth)
     const figFont = getFont(fontName)
     const output = flm.renderText(text, figFont)
     return output
