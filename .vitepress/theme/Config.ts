@@ -12,5 +12,6 @@ export type SimpleCommand = {
 }
 
 export interface ThemeConfig {
+  defaultHeaderFont: string
   commands: SimpleCommand[]
 }

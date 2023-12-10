@@ -22,6 +22,7 @@ export default defineConfigWithTheme<ThemeConfig>({
     ['meta', { content: "width=device-width,initial-scale=1.0", name: "viewport" }],
   ],
   themeConfig: {
+    defaultHeaderFont: 'basic',
     commands: [{
       command: 'about',
       aliases: ['info'],

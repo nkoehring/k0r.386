@@ -16,13 +16,7 @@ const prompt = '\n$> '
 const textArea = ref<HTMLTextAreaElement | null>(null)
 const footer = ref([])
 
-const figlet = useFiglet()
-
-function getHeaderArt(header: string, font: string) {
-  // Why is that so simple to approximate? Pretty sure, there is a mistake somewhere...
-  const maxWidth = Math.round(textArea.value?.getBoundingClientRect().width / 10) - 2
-  return figlet.render(header, font, maxWidth)
-}
+const figlet = useFiglet(site.value.themeConfig.defaultHeaderFont)
 
 function parsedContent(src: string) {
   const pieces = src.split('---').map(s => s.trim())
@@ -44,13 +38,13 @@ function getCurrentPage(title: string) {
     console.error('☠️ current page not found in the list. This should never happen.')
     return {
       title: 'not_found',
-      headerArt: getHeaderArt('404', 'chunky'),
+      headerArt: figlet.render('404'),
       content: 'The page could not be found.',
       uris: [],
     }
   }
   const { header, headerFont, uris } = page.frontmatter
-  const headerArt = getHeaderArt(header, headerFont ?? 'chunky')
+  const headerArt = figlet.render(header, headerFont)
   const content = parsedContent(page.src)
 
   return { title, headerArt, content, uris: uris ?? [] }
@@ -62,6 +56,7 @@ onMounted(() => {
     return
   }
 
+  figlet.setInputElement(textArea.value)
   const { addText, addLine, clear, footerLinks, setFooter } = useTerminal(textArea.value, commands.value, pages)
 
   watch(page, () => {
