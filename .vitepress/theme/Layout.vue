@@ -2,7 +2,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useData } from 'vitepress'
 import useTerminal from './useTerminal'
-import titleArt from './titles'
+import useFiglet from './useFiglet'
 import { data as pages } from './pages.data'
 
 import type { Uri } from './Config'
@@ -16,9 +16,10 @@ const prompt = '\n$> '
 const textArea = ref<HTMLTextAreaElement | null>(null)
 const footer = ref([])
 
-function getTitleArt(key: string) {
-  const art = titleArt[key] ?? titleArt['not_found']
-  return art.join('\n')
+const figlet = useFiglet()
+
+function getHeaderArt(header: string, font: string) {
+  return figlet.render(header, font)
 }
 
 function parsedContent(src: string) {
@@ -30,7 +31,7 @@ function parsedContent(src: string) {
 
 type Page = {
   title: string
-  titleArt: string
+  headerArt: string
   content: string
   uris: Uri[]
 }
@@ -41,15 +42,16 @@ function getCurrentPage(title: string) {
     console.error('☠️ current page not found in the list. This should never happen.')
     return {
       title: 'not_found',
-      titleArt: getTitleArt('not_found'),
+      headerArt: getTitleArt('not_found'),
       content: 'The page could not be found.',
       uris: [],
     }
   }
-  const titleArt = page.frontmatter.titleArt ?? getTitleArt(title)
+  const { header, headerFont, uris } = page.frontmatter
+  const headerArt = getHeaderArt(header, headerFont ?? 'chunky')
   const content = parsedContent(page.src)
 
-  return { title, titleArt, content, uris: page.frontmatter.uris ?? [] }
+  return { title, headerArt, content, uris: uris ?? [] }
 }
 
 onMounted(() => {
@@ -61,8 +63,8 @@ onMounted(() => {
   const { addText, addLine, clear, footerLinks, setFooter } = useTerminal(textArea.value, commands.value, pages)
 
   watch(page, () => {
-    const { title, titleArt, content, uris } = getCurrentPage(page.value.title)
-    addText(`${titleArt}\n${title}\n\n${content}`)
+    const { title, headerArt, content, uris } = getCurrentPage(page.value.title)
+    addText(`${headerArt}\n${title}\n\n${content}`)
     setFooter(uris)
   }, { immediate: true })
 

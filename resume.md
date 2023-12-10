@@ -1,5 +1,7 @@
 ---
 title: 'resume'
+header: 'Resume'
+headerFont: 'Broadway'
 uris: [
   { label: 'CodeGaia', uri: 'https://codegaia.io/' },
   { label: 'Coursedog', uri: 'https://coursedog.com/' },

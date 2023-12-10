@@ -1,5 +1,6 @@
 ---
 title: 'index'
+header: 'Welcome'
 uris: [
   { label: 'Click here for a more classical version', uri: 'https://koehr.in/' },
 ]

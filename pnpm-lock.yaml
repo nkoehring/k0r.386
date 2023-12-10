@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@figlet-ts/fonts':
+    specifier: ^0.5.0
+    version: 0.5.0
+  '@figlet-ts/lib':
+    specifier: ^0.5.0
+    version: 0.5.0
   '@fontsource/vt323':
     specifier: ^5.0.8
     version: 5.0.8
@@ -420,6 +426,14 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@figlet-ts/fonts@0.5.0:
+    resolution: {integrity: sha512-9O5kbxsGReBtUl7Sa7Z9Bq5hZMfBpPDqQbGjDoERL8NTphrSq9Na0Iziv3lO54nq+mVVpfMGO4WpHseKXEASOA==}
+    dev: false
+
+  /@figlet-ts/lib@0.5.0:
+    resolution: {integrity: sha512-Mwkqns5Tul9hx1d33A55OpELZPl3xx+jKit72t95h7ma745uwtbbT7giiPPU0VoJFPIZHHfs4qAvxE3gfQcfHQ==}
+    dev: false
 
   /@fontsource/vt323@5.0.8:
     resolution: {integrity: sha512-WU1qtqHObNqH2Tq6NmzwpO2Gyu3E4nqEOdrSMs0j9mwtRRSHf9FeM+iYVdbA1rhJDDZSw0ZSZakGAZxOJNTTdw==}
