@@ -60,7 +60,7 @@ onMounted(() => {
 
   function handlePageChange() {
     const { title, headerArt, content, uris } = getCurrentPage(page.value.title)
-    addText(`${headerArt}\n${title}\n\n${content}`)
+    addText(`\n${headerArt}\n${title}\n\n${content}`)
     setFooter(uris)
   }
 
@@ -71,6 +71,7 @@ onMounted(() => {
     footerLinks,
     setFooter
   } = useTerminal(textArea.value, commands.value, pages, handlePageChange)
+
   handlePageChange()
 
   watch(footerLinks, () => {
