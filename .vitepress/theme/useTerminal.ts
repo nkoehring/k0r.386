@@ -8,7 +8,7 @@ type VitePressPage = {
   url: string
 }
 
-export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[], pages: VitePressPage[]) {
+export default function useTerminal(inputEl: HTMLTextAreaElement, commands: SimpleCommand[], pages: VitePressPage[], pageChangeCallback: () => void) {
   const prompt = '\n$> '
   const footerLinks = ref<Uri[]>([])
 
@@ -88,7 +88,6 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
   }
 
   function setFooter(uris: Uri[]) {
-    console.log('setting footer links', uris)
     footerLinks.value = uris
   }
 
@@ -133,6 +132,7 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
 
   async function openPage(page: string) {
     await router.go(page)
+    if (pageChangeCallback) pageChangeCallback(page)
   }
 
   function handleCurrentCommand() {
@@ -162,7 +162,7 @@ export default function useTerminal(inputEl: HTMLTextAreaElement, commands: Simp
       case 'open':
         addText('\n', false)
         if (!args.length) addText('USAGE: go page_name')
-        else router.go(args[0])
+        else openPage(args[0])
         break
       default:
         execUserCommand(cmd)

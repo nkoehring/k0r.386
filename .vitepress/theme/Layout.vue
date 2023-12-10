@@ -57,13 +57,21 @@ onMounted(() => {
   }
 
   figlet.setInputElement(textArea.value)
-  const { addText, addLine, clear, footerLinks, setFooter } = useTerminal(textArea.value, commands.value, pages)
 
-  watch(page, () => {
+  function handlePageChange() {
     const { title, headerArt, content, uris } = getCurrentPage(page.value.title)
     addText(`${headerArt}\n${title}\n\n${content}`)
     setFooter(uris)
-  }, { immediate: true })
+  }
+
+  const {
+    addText,
+    addLine,
+    clear,
+    footerLinks,
+    setFooter
+  } = useTerminal(textArea.value, commands.value, pages, handlePageChange)
+  handlePageChange()
 
   watch(footerLinks, () => {
     footer.value = footerLinks.value
