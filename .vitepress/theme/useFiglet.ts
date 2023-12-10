@@ -1,24 +1,22 @@
 import { FLFParser, FontLayoutManager } from '@figlet-ts/lib'
 
-const fontGlob = import.meta.glob('./fonts/*.flf', { as: 'raw' })
-
 async function loadFont(name: string) {
-  const key = Object.keys(fontGlob).find(path => path.toLowerCase() === `./fonts/${name.toLowerCase()}.flf`)
-  if (!key) console.error(`Cannot find font "${name}"!`)
-
-  console.log('found font', name, key)
-  const font = await fontGlob[key]()
-  return font
+  try {
+    const font = await import(`./fonts/${name}.flf?raw`)
+    return font.default
+  } catch (e) {
+    console.error('Cannot load font', name, e)
+  }
 }
 
 async function getFont(name: string, fallback: string) {
-  name = name ?? fallback ?? 'standard'
-  const font = await loadFont(name) ?? await loadFont(fallback) ?? await loadFont('standard') 
+  name = name ?? fallback ?? 'Standard'
+  const font = await loadFont(name) ?? await loadFont(fallback) ?? await loadFont('Standard') 
   const flf = FLFParser.parse(font)
   return flf.font
 }
 
-export default function useFiglet(defaultFontName = 'standard', htmlElement?: HTMLElement) {
+export default function useFiglet(defaultFontName = 'Standard', htmlElement?: HTMLElement) {
   const flm = new FontLayoutManager()
 
   let inputElement: HTMLElement | null = null
